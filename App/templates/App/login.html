@@ -1,0 +1,23 @@
+{% load static %}
+<link rel="stylesheet" href="{% static "css/login.css" %}"> 
+
+
+<form action='', method='POST'>
+    {% csrf_token %}
+    <div class="container">
+      <h1>login</h1>
+      <p>Please fill in this form to create an account.</p>
+      <hr>
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" id="email" required>
+  
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" id="password" required>
+      <hr>
+
+      <button type="submit" class="loginbtn">login</button>
+      <p>Not registered? 
+        <a href="{% url "register" %}" style="text-decoration: none;"> Create an account </a>
+      </p>
+    </div>
+</form>
