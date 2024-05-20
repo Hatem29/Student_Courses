@@ -1,0 +1,46 @@
+{% load static %}
+{% block content %}
+<form action="" method="POST">  
+    {% csrf_token %}
+    <div class="container">
+        <h1>Create Course</h1>
+        <hr>
+        
+        <label for="id"><b>Id </b></label>
+        <input type="text" placeholder="Enter Course ID" name="id" id="id" required>
+
+        <label for="name"><b>Name </b></label>
+        <input type="text" placeholder="Enter Course Name" name="name" id="name" required>
+
+        <label for="description"><b>Description</b></label>
+        <input type="text" placeholder="Enter Description" name="description" id="description" required>
+        
+        <label for="prerequisites"><b>Prerequisites</b></label>
+        <select name="prerequisites" id="prerequisites">
+            <option value="">None</option>
+            {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.id }} - {{ course.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="instructor"><b>Instructor</b></label>
+        <input type="text" placeholder="Enter Instructor" name="instructor" id="instructor" required>
+
+        <label for="capacity"><b>Capacity</b></label>
+        <input type="number" placeholder="Enter Capacity" name="capacity" id="capacity" required>
+
+        <label for="scheduled"><b>Scheduled</b></label>
+        <select name="scheduled" id="scheduled">
+          <option value="">None</option>
+            {% for schedule in scheduled %}
+                <option value="{{ schedule.id }}">
+                    {{ schedule.days }} {{ schedule.startTime }} - {{ schedule.endTime }} (Room: {{ schedule.roomNo }})
+                </option>
+            {% endfor %}
+        </select>
+
+        <hr>
+        <button type="submit" class="createbtn">Submit</button>
+    </div>
+</form>
+{% endblock content %}

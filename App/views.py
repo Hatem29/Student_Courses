@@ -5,6 +5,7 @@ from django.contrib import messages
 from .models import *
 from django.contrib.auth.models import Group
 from .decorators import * 
+from .forms import * 
 
 
 # @forAdmins
@@ -12,10 +13,11 @@ from .decorators import *
 def home(request): 
     courses = Courses.objects.all()
     students = Student.objects.all()
-
+    Schedules = CourseSchedules.objects.all()
     context = {
         "courses":courses,
         "students":students,
+        'schedules':Schedules,
     }
     return render(request, "App/dashboard.html",context)
 
@@ -90,18 +92,86 @@ def course(request, pk):
 
 def deleteStudent(request, pk):
     student = Student.objects.get(id=pk)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('/') 
+
     context = {'student':student}
     return render(request, 'App/deleteStudent.html', context)
 
 def deleteCourse(request, pk):
     course = Courses.objects.get(id=pk)
+    if request.method == 'POST': 
+        course.delete()
+        return redirect('/') 
+    
     context = {'course':course}
     return render(request, 'App/deleteCourse.html', context)
 
 def updateCourse(request, pk):
-    course = course.objects.get(id=pk)
-    context = {'course':course}
+    course = Courses.objects.get(id=pk)
+    courses = Courses.objects.all()
+    scheduled = CourseSchedules.objects.all()
+
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Course updated successfully')
+            return redirect('/')
+    else:
+        form = CourseForm(instance=course)
+
+    context = {'form': form, 'course': course, 'scheduled': scheduled, 'courses': courses}
     return render(request, 'App/updateCourse.html', context)
 
-def createCourse(requset):
-    return redirect('home')
+def createCourse(request):
+    if request.method == 'POST':
+        id = request.POST['id']
+        name = request.POST['name']
+        description = request.POST['description']
+        prerequisites_id = request.POST.get('prerequisites') 
+        instructor = request.POST['instructor']
+        capacity = request.POST['capacity']
+        scheduled_id = request.POST['scheduled']
+
+        if prerequisites_id == '':
+            prerequisites = None
+        else:
+            prerequisites = Courses.objects.get(id=prerequisites_id)
+        
+        if scheduled_id == '':
+            messages.info(request, 'Course withot scheduled')
+            return redirect('createCourse')
+        else:
+            scheduled = CourseSchedules.objects.get(id=scheduled_id)
+        
+        if Courses.objects.filter(id=id).exists():
+            messages.info(request, 'Course with this ID already exists')
+            return redirect('createCourse')
+        else:
+            course = Courses(id=id, name=name, description=description, prerequisites=prerequisites, instructor=instructor, capacity=capacity, scheduled=scheduled)
+            course.save()
+            return redirect('home')
+    else:
+        courses = Courses.objects.all()
+        scheduled = CourseSchedules.objects.all()
+        return render(request, 'App/createCourse.html', {'courses': courses, 'scheduled': scheduled})
+    
+def createScheduled(request):
+    if request.method == 'POST':
+        form = CourseScheduleForm(request.POST)
+        if form.is_valid():
+            form.save()  
+            return redirect('/')  
+    else:
+        form = CourseScheduleForm()
+    return render(request, 'App/createScheduled.html', {'form': form})
+
+def deleteScheduled(request,pk):
+    scheduled = CourseSchedules.objects.get(id=pk)
+    if request.method == 'POST': 
+        scheduled.delete()
+        return redirect('/') 
+  
+    return render(request, 'App/deleteScheduled.html', {'scheduled': scheduled})

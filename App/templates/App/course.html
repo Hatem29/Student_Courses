@@ -1,0 +1,34 @@
+{% extends "App/main.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1>View Course</h1>
+    <hr>
+    
+    <p><b>Id:</b> {{ course.id }}</p>
+
+    <p><b>Name:</b> {{ course.name }}</p>
+    <p><b>Scheduled:</b>
+            {% if course.scheduled %}
+                {{ course.scheduled.get_days_display }} {{ course.scheduled.startTime }} - {{ course.scheduled.endTime }} (Room: {{ course.scheduled.roomNo }})
+            {% else %}
+                None
+            {% endif %}
+      </p>
+    <p><b>Description:</b> {{ course.description }}</p>
+    
+    <p><b>Prerequisites:</b>
+        {% if course.prerequisites %}
+            {{ course.prerequisites.name }}
+        {% else %}
+            None
+        {% endif %}
+    </p>
+
+    <p><b>Instructor:</b> {{ course.instructor }}</p>
+
+    <p><b>Capacity:</b> {{ course.capacity }}</p>
+
+   
+</div>
+{% endblock content %}
