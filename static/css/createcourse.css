@@ -1,4 +1,4 @@
-/* login.css */
+/* createcourse.css */
 
 .container {
   width: 50%;
@@ -15,17 +15,14 @@ form {
   border-radius: 5px;
 }
 
-p {
-  text-align: center;
-}
-
 label {
   display: block;
   margin-bottom: 5px;
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="number"],
+select {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -33,7 +30,16 @@ input[type="password"] {
   border-radius: 5px;
 }
 
-button.loginbtn {
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button.createbtn,
+button.updatebtn {
   background-color: #4CAF50;
   color: white;
   padding: 14px 20px;
@@ -45,15 +51,7 @@ button.loginbtn {
   opacity: 0.9;
 }
 
-button.loginbtn:hover {
-  opacity: 1;
-}
-
-p a {
-  text-decoration: none;
-  color: #333;
-}
-
-p a:hover {
-  text-decoration: underline;
+button.createbtn:hover,
+button.updatebtn:hover {
+  opacity:1;
 }

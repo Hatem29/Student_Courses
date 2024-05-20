@@ -1,6 +1,6 @@
+{% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static "css/login.css" %}"> 
-
 
 <form action='', method='POST'>
     {% csrf_token %}
@@ -16,8 +16,8 @@
       <hr>
 
       <button type="submit" class="loginbtn">login</button>
-      <p>Not registered? 
-        <a href="{% url "register" %}" style="text-decoration: none;"> Create an account </a>
-      </p>
+      <p>Not registered? <a href="{% url "register" %}">Create an account</a>.</p>
+
     </div>
 </form>
+{% endblock content %}

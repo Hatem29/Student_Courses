@@ -1,5 +1,8 @@
-{% load static %}
+
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static "css/createcourse.css" %}"> 
+
 <form action="" method="POST">  
     {% csrf_token %}
     <div class="container">

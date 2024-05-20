@@ -1,9 +1,11 @@
 {% extends "App/main.html" %}
-{% load static %}
-<link rel="stylesheet" href="{% static "css/dashboard.css" %}"> 
+
 
 {% block content %}
-<h1 class= "px-5"> Dashboard page</h1>    
+{% load static %}
+
+ <link rel="stylesheet" href="{% static "css/dashboard.css" %}"> 
+ <h1 class= "px-5"> Dashboard page</h1>     
 
 {% comment %} <div class="container">
   <div class="row">
@@ -29,7 +31,8 @@
 
 
 <div class="container mt-5">
-    <div class="row">
+    <div class="rows">
+
       <div class="col"> 
         <div class="card" >
 
@@ -71,81 +74,82 @@
             </div>
           </div>
 
-      <div class="col">
-        <div class="card">           
-            <div class="card-body">
-              <h5 class="card-title">students</h5> 
-
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">id </th>
-                <th scope="col">first name </th>
-                <th scope="col">last name </th>
-                <th scope="col">email</th>   
-              </tr>
-            </thead>
-            <tbody> 
-                {% for item in students  %}
-              <tr>
-                <th >{{item.id}}</th>
-                <td>{{item.first_name}}</td>
-                <td>{{item.last_name}}</td> 
-                <td>{{item.email}}</td> 
-
-                <td> <a href="{% url "deleteStudent" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> </td> 
-              </tr>  
-              {% endfor %}    
+        
+    <div class="col"> 
+      <div class="card" >
+    
+              <div class="card-body">
+                <h5 class="card-title">Scheduled</h5> 
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                  <a class="btn btn-success" href="{% url "createScheduled" %}" role="button">Create Scheduled</a>
+                </h6> 
+                <div class= "row">
+              </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">id </th>
+                  <th scope="col">startTime </th>
+                  <th scope="col">endTime </th> 
+                  <th scope="col">days </th> 
+                  <th scope="col">roomNo </th> 
+                </tr>
+              </thead>
+            <tbody>
+              {% for item in schedules %}
+                  <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.startTime}}</td>
+                    <td>{{item.endTime}}</td>
+                    <td>{{item.days}}</td> 
+                    <td>{{item.roomNo}}</td> 
+                    <td>
+                    <a href="{% url "deleteScheduled" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> 
+                  </td> 
+                          
+                </tr>     
+              {% endfor %} 
             </tbody>
           </table>
-            </div>
-          </div>  
-          
-          
-          <div class="col"> 
-            <div class="card" >
-    
-                <div class="card-body">
-                  <h5 class="card-title">Scheduled</h5> 
-                  <h6 class="card-subtitle mb-2 text-body-secondary">
-                    <a class="btn btn-success" href="{% url "createScheduled" %}" role="button">Create Scheduled</a>
-                  </h6> 
-                  <div class= "row">
-                </div>
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">id </th>
-                        <th scope="col">startTime </th>
-                        <th scope="col">endTime </th> 
-                        <th scope="col">days </th> 
-                        <th scope="col">roomNo </th> 
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in schedules %}
-                      <tr>
-                        <td>{{item.id}}</td>
-                        <td>{{item.startTime}}</td>
-                        <td>{{item.endTime}}</td>
-                        <td>{{item.days}}</td> 
-                        <td>{{item.roomNo}}</td> 
-                        <td>
-                        <a href="{% url "deleteScheduled" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> 
-                        </td> 
-                          
-                      </tr>     
-                      {% endfor %} 
-                    </tbody>
-                  </table>
-              </div>
-                </div>
-              </div>
-
-
+        </div>
       </div>
     </div>
+
+
+    <div class="col">
+      <div class="card">           
+          <div class="card-body">
+            <h5 class="card-title">students</h5> 
+
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id </th>
+              <th scope="col">first name </th>
+              <th scope="col">last name </th>
+              <th scope="col">email</th>   
+            </tr>
+          </thead>
+          <tbody> 
+              {% for item in students  %}
+            <tr>
+              <th >{{item.id}}</th>
+              <td>{{item.first_name}}</td>
+              <td>{{item.last_name}}</td> 
+              <td>{{item.email}}</td> 
+
+              <td> <a href="{% url "deleteStudent" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> </td> 
+            </tr>  
+            {% endfor %}    
+          </tbody>
+        </table>
+          </div>
+        </div>  
+      </div>
+
+
   </div>
+</div>
 
 
 

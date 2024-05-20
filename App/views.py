@@ -111,7 +111,7 @@ def deleteCourse(request, pk):
 def updateCourse(request, pk):
     course = Courses.objects.get(id=pk)
     courses = Courses.objects.all()
-    scheduled = CourseSchedules.objects.all()
+    schedules = CourseSchedules.objects.all()
 
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
@@ -122,7 +122,7 @@ def updateCourse(request, pk):
     else:
         form = CourseForm(instance=course)
 
-    context = {'form': form, 'course': course, 'scheduled': scheduled, 'courses': courses}
+    context = {'form': form, 'course': course, 'scheduled': schedules, 'courses': courses}
     return render(request, 'App/updateCourse.html', context)
 
 def createCourse(request):
