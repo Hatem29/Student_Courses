@@ -7,4 +7,9 @@ urlpatterns = [
     path('register', views.register, name='register'),
     path('login', views.login, name='login'),
     path('logout', views.logout, name='logout'),
+    path('course/<str:pk>', views.course, name='course'),
+    path('deleteStudent/<str:pk>', views.deleteStudent, name='deleteStudent'),
+    path('updateCourse/<str:pk>', views.updateCourse, name='updateCourse'),
+    path('deleteCourse/<str:pk>', views.deleteCourse, name='deleteCourse'),
+    path('createCourse', views.createCourse, name='createCourse')
 ]

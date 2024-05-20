@@ -1,0 +1,105 @@
+{% extends "App/main.html" %}
+
+
+{% block content %}
+<h1 class= "px-5"> Dashboard page</h1>    
+
+{% comment %} <div class="container">
+  <div class="row">
+    <div class="col">
+      Total students: <span class="badge text-bg-primary">  {{t_students}} </span>
+
+    </div>
+    <div class="col">
+      In Proress : <span class="badge text-bg-success">   {{In_student}}</span>
+
+    </div>
+    <div class="col">
+     Delivered studented: <span class="badge text-bg-danger">   {{d_student }}</span> 
+
+    </div>
+    <div class="col">
+      out of students : <span class="badge text-bg-warning">    {{out_student}}</span>
+
+    </div>
+
+  </div>
+</div> {% endcomment %}
+
+
+<div class="container mt-5">
+    <div class="row">
+      <div class="col"> 
+        <div class="card" >
+
+            <div class="card-body">
+              <h5 class="card-title">Courses</h5> 
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                <a class="btn btn-success" href="{% url "createCourse" %}" role="button">Create</a>
+              </h6> 
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">id </th>
+                    <th scope="col">name </th>
+                    <th scope="col">instructor </th> 
+                    <th scope="col">capacity </th> 
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for item in courses %}
+                  <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.instructor}}</td>
+                    <td>{{item.capacity}}</td> 
+                    <td>
+                    <a href="{% url "course" item.id %}"><i class="fa-solid fa-eye"></i></a>
+                    <a href="{% url "updateCourse" item.id %}"> <i class="fa-solid fa-pen"></i></a>
+                    <a href="{% url "deleteCourse" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> 
+                    </td> 
+                      
+                  </tr>     
+                  {% endfor %} 
+                </tbody>
+              </table>
+          </div>
+            </div>
+          </div>
+
+      <div class="col">
+        <div class="card">           
+            <div class="card-body">
+              <h5 class="card-title">students</h5> 
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id </th>
+                <th scope="col">first name </th>
+                <th scope="col">last name </th>
+                <th scope="col">email</th>   
+              </tr>
+            </thead>
+            <tbody> 
+                {% for item in students  %}
+              <tr>
+                <th >{{item.id}}</th>
+                <td>{{item.first_name}}</td>
+                <td>{{item.last_name}}</td> 
+                <td>{{item.email}}</td> 
+
+                <td> <a href="{% url "deleteStudent" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> </td> 
+              </tr>  
+              {% endfor %}    
+            </tbody>
+          </table>
+            </div>
+          </div>        
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock content %}
