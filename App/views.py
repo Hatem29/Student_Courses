@@ -92,8 +92,11 @@ def course(request, pk):
 
 def deleteStudent(request, pk):
     student = Student.objects.get(id=pk)
+    user = User.objects.get(id=pk)
+
     if request.method == 'POST':
         student.delete()
+        user.delete()
         return redirect('/') 
 
     context = {'student':student}
@@ -101,8 +104,10 @@ def deleteStudent(request, pk):
 
 def deleteCourse(request, pk):
     course = Courses.objects.get(id=pk)
+    scheduled = CourseSchedules.objects.get(id=course.scheduled.id)
     if request.method == 'POST': 
         course.delete()
+        scheduled.delete()
         return redirect('/') 
     
     context = {'course':course}
