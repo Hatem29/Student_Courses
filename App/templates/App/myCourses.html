@@ -1,0 +1,58 @@
+{% extends "App/main.html" %}
+
+
+{% block content %}
+{% load static %}
+
+{% comment %} <div class="container">
+    <div class="row">
+      <div class="col">
+      <form action="" method="GET">  
+          {% csrf_token %}
+          {{coursesFilter.form}}
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>  
+      </div>
+    </div>
+  </div> {% endcomment %}
+
+<div class="col"> 
+    <div class="card" >
+
+        <div class="card-body">
+          <h5 class="card-title">Courses</h5> 
+          <div class= "row">
+          {% comment %} <h6 class="card-subtitle mb-2 text-body-secondary">
+            <a class="btn btn-success" href="{% url "createCourse" %}" role="button">Create</a>
+          </h6>  {% endcomment %}
+
+        </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">id </th>
+                <th scope="col">name </th>
+                <th scope="col">instructor </th> 
+                <th scope="col">capacity </th> 
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in courses %}
+              <tr>
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.instructor}}</td>
+                <td>{{item.capacity}}</td> 
+                <td>
+                <a href="{% url "course" item.id %}"><i class="fa-solid fa-eye"></i></a>
+                <a href="{% url "unrollStudent" item.id %}"><i class="fa-solid fa-trash text-danger"></i></a> 
+                </td> 
+                  
+              </tr>     
+              {% endfor %} 
+            </tbody>
+          </table>
+      </div>
+        </div>
+      </div>
+{% endblock content %}

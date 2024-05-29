@@ -10,22 +10,6 @@ class Student(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     def __str__(self):
         return self.user.username
-    
-class CourseSchedules(models.Model):
-    DAYS = (
-        ('sun','sunday'),
-        ('mon','monday'),
-        ('tue','tuesday'),
-        ('wen','wenday'),
-        ('thu','thursday'),
-        ('fri','friday'),
-        ('sat','satarday'),
-    )
-    id = models.IntegerField(primary_key=True)
-    startTime = models.TimeField()
-    endTime = models.TimeField()
-    days = models.CharField(max_length=10, null=True, choices=DAYS)
-    roomNo = models.CharField(max_length=20)
 
 class Courses(models.Model):
     id = models.CharField(primary_key=True,max_length=10)
@@ -34,10 +18,31 @@ class Courses(models.Model):
     prerequisites = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
     instructor = models.CharField(max_length=50)
     capacity = models.IntegerField()
-    scheduled = models.ForeignKey(CourseSchedules, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+
+class CourseSchedules(models.Model):
+    DAYS = (
+        ('3-days','sunday-tuesday-thursday'),
+        ('2-days','monday-wensday'),
+    )
+    id = models.IntegerField(primary_key=True)
+    startTime = models.TimeField()
+    endTime = models.TimeField()
+    days = models.CharField(max_length=10, null=True, choices=DAYS)
+    roomNo = models.CharField(max_length=20)
+    course = models.ForeignKey(Courses, on_delete=models.SET_NULL, null=True)
 
 class StudentReg(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.IntegerField(primary_key=True, auto_created=True)
     studentID = models.ForeignKey(Student, on_delete=models.CASCADE)
     courseID = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.studentID.user.username + " " + self.courseID.name
 
+class Notification(models.Model):
+    course = models.ForeignKey(Courses, on_delete=models.DO_NOTHING)
+    message = models.TextField()
+
+    def _str_(self):
+        return f'Notification for {self.course.name} course'

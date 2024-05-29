@@ -32,13 +32,13 @@
         <label for="capacity"><b>Capacity</b></label>
         <input type="number" name="capacity" id="capacity" value="{{ form.capacity.value }}" required>
 
-        <label for="scheduled"><b>Scheduled</b></label>
-        <select name="scheduled" id="scheduled">
+        {% comment %} <label for="scheduled"><b>Scheduled</b></label> {% endcomment %}
+        {% comment %} <select name="scheduled" id="scheduled">
           <option value="">None</option>
             {% for schedule in scheduled %}
                 <option value="{{ schedule.id }}" {% if form.scheduled.value == schedule.id %}selected{% endif %}>{{ schedule.get_days_display }} {{ schedule.startTime }} - {{ schedule.endTime }} (Room: {{ schedule.roomNo }})</option>
             {% endfor %}
-        </select>
+        </select> {% endcomment %}
 
         <hr>
         <button type="submit" class="updatebtn">Submit</button>

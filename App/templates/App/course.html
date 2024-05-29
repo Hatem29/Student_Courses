@@ -12,13 +12,13 @@
     <p><b>Id:</b> {{ course.id }}</p>
 
     <p><b>Name:</b> {{ course.name }}</p>
-    <p><b>Scheduled:</b>
+    {% comment %} <p><b>Scheduled:</b>
             {% if course.scheduled %}
                 {{ course.scheduled.get_days_display }} {{ course.scheduled.startTime }} - {{ course.scheduled.endTime }} (Room: {{ course.scheduled.roomNo }})
             {% else %}
                 None
             {% endif %}
-      </p>
+      </p> {% endcomment %}
     <p><b>Description:</b> {{ course.description }}</p>
     
     <p><b>Prerequisites:</b>

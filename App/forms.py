@@ -7,9 +7,9 @@ from django.contrib.auth.models import User
 class CourseForm(ModelForm):
     class Meta:
         model = Courses
-        fields = ['id', 'name', 'description', 'prerequisites', 'instructor', 'capacity', 'scheduled'] 
+        fields = ['id', 'name', 'description', 'prerequisites', 'instructor', 'capacity'] 
 
 class CourseScheduleForm(ModelForm):
     class Meta:
         model = CourseSchedules
-        fields = ['startTime', 'endTime', 'days', 'roomNo']  
+        fields = '__all__' 

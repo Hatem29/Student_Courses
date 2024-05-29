@@ -29,6 +29,29 @@
   </div>
 </div> {% endcomment %}
 
+<div class="container">
+  <div class="row">
+    <div class="col">
+    <form action="" method="GET">  
+        {% csrf_token %}
+        {{coursesFilter.form}}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>  
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+    <form action="" method="GET">  
+        {% csrf_token %}
+        {{studentsFilter.form}}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>  
+    </div>
+  </div>
+</div>
 
 <div class="container mt-5">
     <div class="rows">
