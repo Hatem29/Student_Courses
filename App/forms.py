@@ -9,6 +9,11 @@ class CourseForm(ModelForm):
         model = Courses
         fields = ['id', 'name', 'description', 'prerequisites', 'instructor', 'capacity'] 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limit the queryset for prerequisites field to only existing courses
+        self.fields['prerequisites'].queryset = Courses.objects.all()
+
 class CourseScheduleForm(ModelForm):
     class Meta:
         model = CourseSchedules

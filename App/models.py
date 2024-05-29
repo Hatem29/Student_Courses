@@ -15,7 +15,7 @@ class Courses(models.Model):
     id = models.CharField(primary_key=True,max_length=10)
     name = models.CharField( max_length=50)
     description = models.CharField(max_length=255)
-    prerequisites = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True, blank=True)
+    prerequisites = models.ManyToManyField('self', blank=True)
     instructor = models.CharField(max_length=50)
     capacity = models.IntegerField()
     def __str__(self):

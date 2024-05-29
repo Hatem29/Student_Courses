@@ -234,10 +234,8 @@ def courses(request):
 @forStudents
 @login_required(login_url='login')
 def enrollStudent(request, pk):
-    
     student = Student.objects.get(id=request.user.id)
     course = Courses.objects.get(id=pk)
-
     if StudentReg.objects.filter(studentID = student, courseID = course).exists():
         return redirect('courses')
     
@@ -255,13 +253,17 @@ def enrollStudent(request, pk):
             Q(endTime__range = (schedule.startTime, schedule.endTime)) |
             Q(startTime__lte = schedule.startTime) |
             Q(endTime__gte = schedule.endTime),
-            roomNo = schedule.roomNo, days = schedule.days).exists():
+            roomNo = schedule.roomNo, days = schedule.days).exists() :
 
-            # print('hiiiiii I existtttttttttttttttttttttttttttttttttttttttttttttttttttttttttt')
             exist = True
             break
-    
     if exist:
+        return redirect('courses')
+    
+    coursesIDs = [item.courseID.id for item in studentRegs]
+    preReq = course.prerequisites.all()
+
+    if not(all(prerequisite.id in coursesIDs for prerequisite in preReq)):
         return redirect('courses')
 
     studentReg = StudentReg(studentID=student, courseID=course)
