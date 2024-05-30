@@ -1,38 +1,58 @@
 {% extends "App/main.html" %}
 
-
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static "css/courseview.css" %}"> 
 
-<div class="container">
-    <h1>View Course</h1>
+<div class="container mt-5">
+    <h1 class="px-5">View Course</h1>
     <hr>
     
-    <p><b>Id:</b> {{ course.id }}</p>
-
-    <p><b>Name:</b> {{ course.name }}</p>
-    {% comment %} <p><b>Scheduled:</b>
-            {% if course.scheduled %}
-                {{ course.scheduled.get_days_display }} {{ course.scheduled.startTime }} - {{ course.scheduled.endTime }} (Room: {{ course.scheduled.roomNo }})
+    <div class="course-details">
+        <p><b>Id:</b> {{ course.id }}</p>
+        <p><b>Name:</b> {{ course.name }}</p>
+        <p><b>Description:</b> {{ course.description }}</p>
+        <p><b>Prerequisites:</b>
+            {% if course.prerequisites.all %}
+                <ul>
+                    {% for prerequisite in course.prerequisites.all %}
+                        <li>{{ prerequisite.id }} - {{ prerequisite.name }}</li>
+                    {% endfor %}
+                </ul>
             {% else %}
-                None
+                Nothing
             {% endif %}
-      </p> {% endcomment %}
-    <p><b>Description:</b> {{ course.description }}</p>
-    
-    <p><b>Prerequisites:</b>
-        {% if course.prerequisites %}
-            {{ course.prerequisites.name }}
-        {% else %}
-            None
-        {% endif %}
-    </p>
+        </p>
+        <p><b>Instructor:</b> {{ course.instructor }}</p>
+        <p><b>Capacity:</b> {{ course.capacity }}</p>
+        <p><b>Enrollment:</b> {{ enroll }}</p>
+        <p><b>Popularity:</b> {{ pop }}%</p>
+    </div>
 
-    <p><b>Instructor:</b> {{ course.instructor }}</p>
+    <h2 class="mt-4">Course Schedule</h2>
+    {% if course.courseSchedules %}
+        <table class="table schedule-table">
+            <thead>
+                <tr>
+                    <th>Days</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Room No</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ course.courseSchedules.get_days_display }}</td>
+                    <td>{{ course.courseSchedules.startTime|time:"h:i A" }}</td>
+                    <td>{{ course.courseSchedules.endTime|time:"h:i A" }}</td>
+                    <td>{{ course.courseSchedules.roomNo }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% else %}
+        <p>No schedule available for this course.</p>
+    {% endif %}
 
-    <p><b>Capacity:</b> {{ course.capacity }}</p>
 
-   
 </div>
 {% endblock content %}

@@ -1,47 +1,66 @@
-
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static "css/createcourse.css" %}"> 
-<form action="" method="POST">
-    {% csrf_token %}
-    <div class="container">
-        <h1>Update Course</h1>
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+          </div>
+
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container">
+    <h1>Update Course</h1>
+    <hr>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <label for="id">Id</label>
+        {{ form.id }}
+
+        <label for="name">Name</label>
+        {{ form.name }}
+
+        <label for="description">Description</label>
+        {{ form.description }}
+
+        <label for="prerequisites">Prerequisites</label>
+        {{ form.prerequisites }}
+
+        <label for="instructor">Instructor</label>
+        {{ form.instructor }}
+
+        <label for="capacity">Capacity</label>
+        {{ form.capacity }}
+
+        <h2>Update Schedule</h2>
         <hr>
+
+        {% if scheduled %}
+            <label for="startTime">Start Time</label>
+            <input type="time" name="startTime" id="startTime" value="{{ scheduled.startTime|time:'H:i' }}" required>
+                
+            <label for="endTime">End Time</label>
+            <input type="time" name="endTime" id="endTime" value="{{ scheduled.endTime|time:'H:i' }}" required>
+            
+            <label for="days">Days</label>
+            <select name="days" id="days" required>
+                <option value="3-days" {% if scheduled.days == '3-days' %}selected{% endif %}>Sunday-Tuesday-Thursday</option>
+                <option value="2-days" {% if scheduled.days == '2-days' %}selected{% endif %}>Monday-Wednesday</option>
+            </select>
+            
+            <label for="roomNo">Room Number</label>
+            <input type="text" name="roomNo" id="roomNo" value="{{ scheduled.roomNo }}" required>
+            <hr>
+        {% endif %}
         
-        <label for="id"><b>Id </b></label>
-        <input type="text" id="id" value="{{ form.id.value }}" disabled>
-        <input type="hidden" name="id" value="{{ form.id.value }}">
-
-        <label for="name"><b>Name </b></label>
-        <input type="text" name="name" id="name" value="{{ form.name.value }}" required>
-
-        <label for="description"><b>Description</b></label>
-        <input type="text" name="description" id="description" value="{{ form.description.value }}" required>
-        
-        <label for="prerequisites"><b>Prerequisites</b></label>
-        <select name="prerequisites" id="prerequisites">
-            <option value="">None</option>
-            {% for course in courses %}
-                <option value="{{ course.id }}" {% if form.prerequisites.value == course.id %}selected{% endif %}>{{ course.id }} - {{ course.name }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="instructor"><b>Instructor</b></label>
-        <input type="text" name="instructor" id="instructor" value="{{ form.instructor.value }}" required>
-
-        <label for="capacity"><b>Capacity</b></label>
-        <input type="number" name="capacity" id="capacity" value="{{ form.capacity.value }}" required>
-
-        {% comment %} <label for="scheduled"><b>Scheduled</b></label> {% endcomment %}
-        {% comment %} <select name="scheduled" id="scheduled">
-          <option value="">None</option>
-            {% for schedule in scheduled %}
-                <option value="{{ schedule.id }}" {% if form.scheduled.value == schedule.id %}selected{% endif %}>{{ schedule.get_days_display }} {{ schedule.startTime }} - {{ schedule.endTime }} (Room: {{ schedule.roomNo }})</option>
-            {% endfor %}
-        </select> {% endcomment %}
-
-        <hr>
-        <button type="submit" class="updatebtn">Submit</button>
-    </div>
-</form>
+        <button type="submit" class="createbtn">Update</button>
+    </form>
+</div>
 {% endblock content %}

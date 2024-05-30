@@ -11,29 +11,35 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 
-@forAdmins
 @login_required(login_url='login')
-def home(request): 
+@forAdmins
+def home(request):
     courses = Courses.objects.all()
     students = Student.objects.all()
-    Schedules = CourseSchedules.objects.all()
+    schedules = CourseSchedules.objects.all()
+    
+    if request.GET.get('searchStudents'):
+        query = request.GET.get('searchStudents')
+        students = students.filter(first_name__icontains=query) | students.filter(last_name__icontains=query) | students.filter(email__icontains=query)
+    else: 
+        students = students
 
-    coursesFilter = CoursesFilter(request.GET, queryset= courses)
-    courses = coursesFilter.qs
-
-    studentsFilter = StudentsFilter(request.GET, queryset= students)
-    students = studentsFilter.qs
+    if request.GET.get('searchCourses'):
+        query = request.GET.get('searchCourses')
+        courses = courses.filter(id__icontains=query) | courses.filter(name__icontains=query) | courses.filter(instructor__icontains=query)
+    else: 
+        courses = courses
 
     context = {
-        "courses":courses,
-        "students":students,
-        'schedules':Schedules,
-        "coursesFilter":coursesFilter,
-        "studentsFilter":studentsFilter,
+        'courses': courses,
+        'students': students,
+        'schedules': schedules,
     }
-    return render(request, "App/dashboard.html",context)
+
+    return render(request, 'App/dashboard.html', context)
 
 @login_required(login_url='login')
+@forStudents
 def students(request):
     return render(request, 'App/students.html')
 
@@ -101,11 +107,18 @@ def logout(request):
 @login_required(login_url='login')
 def course(request, pk):
     course = Courses.objects.get(id=pk)
-    context = {'course':course}
+    enroll = StudentReg.objects.filter(courseID = course).count()
+    regs = StudentReg.objects.count()
+    pop = enroll/regs * 100
+
+    context = {'course':course,
+               'enroll':enroll,
+               'pop':pop,
+               }
     return render(request, 'App/course.html', context)
-    
-@forAdmins
+   
 @login_required(login_url='login')
+@forAdmins
 def deleteStudent(request, pk):
     student = Student.objects.get(id=pk)
     user = User.objects.get(id=pk)
@@ -113,93 +126,103 @@ def deleteStudent(request, pk):
     if request.method == 'POST':
         student.delete()
         user.delete()
+        messages.warning(request, "deleted")
         return redirect('/') 
 
     context = {'student':student}
     return render(request, 'App/deleteStudent.html', context)
 
-@forAdmins
 @login_required(login_url='login')
+@forAdmins
 def deleteCourse(request, pk):
     course = Courses.objects.get(id=pk)
     if request.method == 'POST': 
         course.delete()
+        messages.warning(request, "deleted")
         return redirect('/') 
     
     context = {'course':course}
     return render(request, 'App/deleteCourse.html', context)
 
-@forAdmins
 @login_required(login_url='login')
+@forAdmins
 def updateCourse(request, pk):
     course = Courses.objects.get(id=pk)
     courses = Courses.objects.all()
-    schedules = CourseSchedules.objects.all()
+    schedules = course.courseSchedules
 
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Course updated successfully')
-            return redirect('/')
-    else:
-        form = CourseForm(instance=course)
 
+            schedules.startTime = request.POST.get('startTime')
+            schedules.endTime = request.POST.get('endTime')
+            schedules.days = request.POST.get('days')
+            schedules.roomNo = request.POST.get('roomNo')
+            schedules.save()
+
+            messages.success(request, 'Course and schedule updated successfully')
+            return redirect('/')
+        else:
+            messages.warning(request, 'not valid')
+
+    else:    
+        form = CourseForm(instance=course)
+    
     context = {'form': form, 'course': course, 'scheduled': schedules, 'courses': courses}
     return render(request, 'App/updateCourse.html', context)
 
+@login_required(login_url='login')
 @forAdmins
-@login_required(login_url='login')
 def createCourse(request):
-    if request.method == 'POST':
-        id = request.POST['id']
-        name = request.POST['name']
-        description = request.POST['description']
-        prerequisites_id = request.POST.get('prerequisites') 
-        instructor = request.POST['instructor']
-        capacity = request.POST['capacity']
-
-        if prerequisites_id == '':
-            prerequisites = None
-        else:
-            prerequisites = Courses.objects.get(id=prerequisites_id)
-        
-        
-        if Courses.objects.filter(id=id).exists():
-            messages.info(request, 'Course with this ID already exists')
-            return redirect('createCourse')
-        else:
-            course = Courses(id=id, name=name, description=description, prerequisites=prerequisites, instructor=instructor, capacity=capacity)
-            course.save()
-            return redirect('home')
-    else:
-        courses = Courses.objects.all()
-        return render(request, 'App/createCourse.html', {'courses': courses})
-
-@forAdmins    
-@login_required(login_url='login')
-def createScheduled(request):
     if request.method == 'POST':
         form = CourseScheduleForm(request.POST)
         if form.is_valid():
-            form.save()  
-            return redirect('/')  
+            course_id = request.POST['id']
+            name = request.POST['name']
+            description = request.POST['description']
+            instructor = request.POST['instructor']
+            capacity = int(request.POST['capacity'])
+            prerequisites_ids = request.POST.getlist('prerequisites')
+            
+            if Courses.objects.filter(id=course_id).exists():
+                messages.warning(request, 'Course with this ID already exists')
+                return redirect('createCourse')
+            
+            schedule = form.save(commit=False)  
+            
+            course = Courses(
+                id=course_id,
+                name=name,
+                description=description,
+                instructor=instructor,
+                capacity=capacity
+            )
+            
+            course.save()
+            
+            schedule.course_id = course.id  
+            schedule.save()  
+            
+            course.courseSchedules = schedule  
+            course.save()  
+            
+            if prerequisites_ids:
+                prerequisites = Courses.objects.filter(id__in=prerequisites_ids)
+                course.prerequisites.add(*prerequisites)
+            
+            messages.success(request, 'Course created successfully')
+            return redirect('home')
+        else:
+            messages.warning(request, 'There was an error in the form. Please correct it and try again.')
     else:
         form = CourseScheduleForm()
-    return render(request, 'App/createScheduled.html', {'form': form})
+        courses = Courses.objects.all()
+        return render(request, 'App/createCourse.html', {'form': form, 'courses': courses})
 
-@forAdmins
 @login_required(login_url='login')
-def deleteScheduled(request, pk):
-    scheduled = CourseSchedules.objects.get(id=pk)
-    if request.method == 'POST': 
-        scheduled.delete()
-        return redirect('/') 
-  
-    return render(request, 'App/deleteScheduled.html', {'scheduled': scheduled})
-
 @forStudents
-@login_required(login_url='login')
 def myCourses(request):
     all_courses = []
     try:
@@ -220,57 +243,67 @@ def myCourses(request):
     return render(request, "App/myCourses.html", context)
 
 @login_required(login_url='login')
+@forStudents
 def courses(request):
     courses = Courses.objects.all()
-    coursesFilter = CoursesFilter(request.GET, queryset= courses)
-    courses = coursesFilter.qs
+
+    if request.GET.get('searchCourses'):
+        query = request.GET.get('searchCourses')
+        courses = courses.filter(id__icontains=query) | courses.filter(name__icontains=query) | courses.filter(instructor__icontains=query)
+    else: 
+        courses = courses
+
     context = {
         "courses":courses,
-        "coursesFilter":coursesFilter,
     }
 
     return render(request, "App/courses.html", context)
 
-@forStudents
 @login_required(login_url='login')
+@forStudents
 def enrollStudent(request, pk):
     student = Student.objects.get(id=request.user.id)
     course = Courses.objects.get(id=pk)
-    if StudentReg.objects.filter(studentID = student, courseID = course).exists():
+    
+    if StudentReg.objects.filter(studentID=student, courseID=course).exists():
+        messages.warning(request, "Course is already enrolled/taken")
         return redirect('courses')
     
-    courseSchedules = CourseSchedules.objects.filter(course = course)
-
-    studentRegs = StudentReg.objects.filter(studentID = student)
-    studentSchedules = CourseSchedules.objects.none()
-    for item in studentRegs :
-        studentSchedules |= CourseSchedules.objects.filter(course = item.courseID)
-
-    exist = False
-    for schedule in courseSchedules:
-        if studentSchedules.filter( 
-            Q(startTime__range = (schedule.startTime, schedule.endTime)) |
-            Q(endTime__range = (schedule.startTime, schedule.endTime)) |
-            Q(startTime__lte = schedule.startTime) |
-            Q(endTime__gte = schedule.endTime),
-            roomNo = schedule.roomNo, days = schedule.days).exists() :
-
-            exist = True
-            break
+    course_schedule = course.courseSchedules
+    
+    student_regs = StudentReg.objects.filter(studentID=student).values_list('courseID', flat=True)
+    student_schedules = CourseSchedules.objects.filter(courses__in=student_regs)
+    
+    exist = student_schedules.filter(
+        Q(startTime__range=(course_schedule.startTime, course_schedule.endTime)) |
+        Q(endTime__range=(course_schedule.startTime, course_schedule.endTime)) |
+        Q(startTime__lte=course_schedule.startTime, endTime__gte=course_schedule.endTime),
+        roomNo=course_schedule.roomNo, days=course_schedule.days
+    ).exists()
+    
     if exist:
+        messages.warning(request, "Course schedules not suitable")
         return redirect('courses')
     
-    coursesIDs = [item.courseID.id for item in studentRegs]
-    preReq = course.prerequisites.all()
-
-    if not(all(prerequisite.id in coursesIDs for prerequisite in preReq)):
+    prerequisites = course.prerequisites.all()
+    if not all(prerequisite.id in student_regs for prerequisite in prerequisites):
+        messages.warning(request, "Not all pre-requisites are met")
         return redirect('courses')
+    
+    student_reg = StudentReg(studentID=student, courseID=course)
+    student_reg.save()
 
-    studentReg = StudentReg(studentID=student, courseID=course)
-    studentReg.save()
+    messages.success(request, 'Successfully')
     return redirect('courses')
 
+@login_required(login_url='login')
+@forStudents
 def unrollStudent(request, pk):
-    studentReg = StudentReg.objects.get(courseID=pk)
+    studentReg = StudentReg.objects.get(courseID=pk, studentID = request.user.id)
     studentReg.delete()
     return redirect('myCourses') 
+
+def notification(request):
+    notification = Notification.objects.all()
+    print(notification)
+    return render(request, 'App/notification.html', {'notification': notification})

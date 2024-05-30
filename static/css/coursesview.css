@@ -16,25 +16,26 @@ h1 {
   width: 100%; 
 }
 
-.card {
-  margin-bottom: 20px;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+hr {
+  border-top: 1px solid #dee2e6;
 }
 
-.card-body {
-  padding: 20px;
+.course-details {
+  margin-bottom: 30px;
 }
 
-.card-title {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 15px;
+.course-details p {
+  font-size: 1.1rem;
+  margin: 5px 0;
 }
 
-.card-subtitle {
-  margin-top: 10px;
+.course-details ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.course-details ul li {
+  font-size: 1.1rem;
 }
 
 .table {
@@ -69,12 +70,8 @@ h1 {
   color: #17a2b8;
 }
 
-.table .fa-pen {
-  color: #ffc107;
-}
-
-.table .fa-trash {
-  color: #dc3545;
+.table .fa-plus {
+  color: #28a745;
 }
 
 .search-form {
@@ -113,4 +110,43 @@ h1 {
 
 label {
   font-weight: 600;
+}
+
+.card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.card-subtitle {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.card-subtitle .btn {
+  margin-left: 5px;
+}
+
+.text-body-secondary {
+  color: #6c757d;
+}
+
+.col {
+  margin-top: 20px;
+  margin-left: 200px;
+  margin-right: 200px;
+  width: 80%;
 }

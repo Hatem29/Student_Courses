@@ -1,0 +1,17 @@
+{% extends "App/main.html" %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static "css/notification.css" %}"> 
+<div class="cont">
+<div class="col-sm-12">
+  <div class="alert fade alert-simple alert-info alert-dismissible text-left fontfamily-montserrat fontsize-16 fontweight-light brk-library-rendered rendered show" role="alert" data-brk-library="componentalert">
+    <i class="start-icon fa fa-info-circle faa-shake animated"></i>
+    {% for item in notification %}
+    <strong class="fontweight-semibold">Course : {{ item.course.name }} |</strong> {{ item.message }}
+    {% endfor %}
+  </div>
+</div>
+</div>
+{% endblock content %}
+

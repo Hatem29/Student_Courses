@@ -1,49 +1,119 @@
 
-.container {
-  width: 50%;
-  margin: 0 auto;
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
 }
 
 h1 {
+  margin-bottom: 30px;
   text-align: center;
-}
-
-.container p {
-  margin-bottom: 10px;
-}
-
-.container hr {
-  margin-bottom: 20px;
-}
-
-.container b {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .container {
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  margin-top: 50px;
+  width: 100%; 
 }
 
-.container p {
-  margin-bottom: 10px;
+
+
+hr {
+  border-top: 1px solid #dee2e6;
 }
 
-button.createbtn,
-button.updatebtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
+.course-details {
+  margin-bottom: 30px;
+}
+
+.course-details p {
+  font-size: 1.1rem;
+  margin: 5px 0;
+}
+
+.course-details ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.course-details ul li {
+  font-size: 1.1rem;
+}
+
+.table {
   margin-top: 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  opacity: 0.9;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-button.createbtn:hover,
-button.updatebtn:hover {
-  opacity: 1;
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.table th {
+  background-color: #e9ecef;
+  font-weight: 600;
+}
+
+.table td {
+  background-color: #ffffff;
+}
+
+.table .fa {
+  font-size: 1rem;
+  margin: 0 5px;
+}
+
+.table .fa-eye {
+  color: #17a2b8;
+}
+
+.table .fa-pen {
+  color: #ffc107;
+}
+
+.table .fa-trash {
+  color: #dc3545;
+}
+
+.search-form {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  border-radius: 5px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-primary,
+.btn-success {
+  border-radius: 5px;
+}
+
+label {
+  font-weight: 600;
 }

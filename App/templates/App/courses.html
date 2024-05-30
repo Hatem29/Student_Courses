@@ -1,20 +1,45 @@
 {% extends "App/main.html" %}
-
-
 {% block content %}
+
 {% load static %}
+<link rel="stylesheet" href="{% static "css/coursesview.css" %}"> 
+
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        {% if message.message == "wrong" %}
+
+          <div class="alert alert-danger alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+          </div>
+
+        {% else %}
+
+          <div class="alert alert-success alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+          </div>
+
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
 
 <div class="container">
-    <div class="row">
-      <div class="col">
-      <form action="" method="GET">  
-          {% csrf_token %}
-          {{coursesFilter.form}}
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>  
-      </div>
+  <div class="row">
+    <div class="col">
+      <form action="" method="GET" class="search-form">  
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="searchInput">Search Course:</label>
+          <input type="text" class="form-control" id="searchInput" name="searchCourses" placeholder="Enter id , name or instructor">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>  
     </div>
   </div>
+</div>
 
 <div class="col"> 
     <div class="card" >
@@ -30,10 +55,12 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">id </th>
-                <th scope="col">name </th>
-                <th scope="col">instructor </th> 
-                <th scope="col">capacity </th> 
+                <th scope="col">Id </th>
+                <th scope="col">Name </th>
+                <th scope="col">Instructor </th> 
+                <th scope="col">Capacity </th> 
+                <th scope="col">Actions </th> 
+
               </tr>
             </thead>
             <tbody>

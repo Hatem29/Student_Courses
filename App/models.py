@@ -11,6 +11,18 @@ class Student(models.Model):
     def __str__(self):
         return self.user.username
 
+class CourseSchedules(models.Model):
+    DAYS = (
+        ('3-days','sunday-tuesday-thursday'),
+        ('2-days','monday-wensday'),
+    )
+    id = models.AutoField(primary_key=True)
+    startTime = models.TimeField()
+    endTime = models.TimeField()
+    days = models.CharField(max_length=10, null=True, choices=DAYS)
+    roomNo = models.CharField(max_length=20)
+
+
 class Courses(models.Model):
     id = models.CharField(primary_key=True,max_length=10)
     name = models.CharField( max_length=50)
@@ -18,21 +30,11 @@ class Courses(models.Model):
     prerequisites = models.ManyToManyField('self', blank=True)
     instructor = models.CharField(max_length=50)
     capacity = models.IntegerField()
+    courseSchedules = models.ForeignKey(CourseSchedules, on_delete=models.CASCADE, null=True)
+
     def __str__(self):
         return self.name
-
-class CourseSchedules(models.Model):
-    DAYS = (
-        ('3-days','sunday-tuesday-thursday'),
-        ('2-days','monday-wensday'),
-    )
-    id = models.IntegerField(primary_key=True)
-    startTime = models.TimeField()
-    endTime = models.TimeField()
-    days = models.CharField(max_length=10, null=True, choices=DAYS)
-    roomNo = models.CharField(max_length=20)
-    course = models.ForeignKey(Courses, on_delete=models.SET_NULL, null=True)
-
+    
 class StudentReg(models.Model):
     id = models.IntegerField(primary_key=True, auto_created=True)
     studentID = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -42,6 +44,7 @@ class StudentReg(models.Model):
 
 class Notification(models.Model):
     course = models.ForeignKey(Courses, on_delete=models.DO_NOTHING)
+    date = models.DateTimeField(auto_created=True,null=True)
     message = models.TextField()
 
     def _str_(self):

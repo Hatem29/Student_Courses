@@ -8,7 +8,6 @@ def notLoggedUser(view_func):
            return view_func(request,*args, **kwargs) 
     return wrapper_func
 
-
 def forAdmins(view_func):
     def wrapper_func(request, *args, **kwargs): 
         group = None  
@@ -18,6 +17,8 @@ def forAdmins(view_func):
             return view_func(request,*args, **kwargs)  
         if group =="student":  
             return redirect('myCourses') 
+        else:
+            return #
     return wrapper_func 
 
 def forStudents(view_func):
@@ -29,4 +30,6 @@ def forStudents(view_func):
             return view_func(request,*args, **kwargs)  
         if group =="admin":  
             return redirect('home') 
+        else:
+            return #
     return wrapper_func 
